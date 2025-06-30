@@ -1,0 +1,111 @@
+name: microbiome
+description: Extracts unmapped reads from single-cell RNA-seq data, filters human contamination, and classifies microbial sequences using KrakenUniq, Bracken, and MetaPhlAn.
+keywords:
+  - single-cell
+  - microbiome analysis
+  - unmapped reads
+  - metagenomics
+  - taxonomic classification
+  - barcode mapping
+  - single-cell integration
+tools:
+  - samtools:
+      description: Samtools is a suite of programs for interacting with high-throughput sequencing data.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/
+      tool_dev_url: https://github.com/samtools/samtools
+      licence: "MIT"
+  - bedtools:
+      description: Bedtools provides a suite of utilities for genome arithmetic.
+      homepage: https://bedtools.readthedocs.io/
+      documentation: https://bedtools.readthedocs.io/en/latest/
+      tool_dev_url: https://github.com/arq5x/bedtools2
+      licence: "GPL-2.0"
+  - bowtie2:
+      description: Bowtie2 is an ultrafast, memory-efficient tool for aligning sequencing reads to long reference sequences.
+      homepage: http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
+      documentation: http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml
+      tool_dev_url: https://github.com/BenLangmead/bowtie2
+      licence: "GPL-3.0"
+  - krakenuniq:
+      description: KrakenUniq is a taxonomic sequence classifier with unique k-mer counting for improved accuracy.
+      homepage: https://ccb.jhu.edu/software/krakenuniq/
+      documentation: https://github.com/fbreitwieser/krakenuniq
+      tool_dev_url: https://github.com/fbreitwieser/krakenuniq
+      licence: "GPL-3.0"
+  - bracken:
+      description: Bracken is an extension of KrakenUniq that estimates species abundance from metagenomic classification.
+      homepage: https://ccb.jhu.edu/software/bracken/
+      documentation: https://github.com/jenniferlu717/Bracken
+      tool_dev_url: https://github.com/jenniferlu717/Bracken
+      licence: "GPL-3.0"
+  - metaphlan:
+      description: MetaPhlAn is a computational tool for profiling microbial communities from metagenomic data.
+      homepage: https://huttenhower.sph.harvard.edu/metaphlan/
+      documentation: https://github.com/biobakery/MetaPhlAn/wiki
+      tool_dev_url: https://github.com/biobakery/MetaPhlAn
+      licence: "MIT"
+  - umi-tools:
+      description: UMI-tools is a suite for processing Unique Molecular Identifiers (UMIs) in NGS data.
+      homepage: https://umi-tools.readthedocs.io/en/latest/
+      documentation: https://umi-tools.readthedocs.io/
+      tool_dev_url: https://github.com/CGATOxford/UMI-tools
+      licence: "MIT"
+input:
+  - bam_file:
+      type: file
+      description: BAM file from Cell Ranger containing mapped and unmapped reads.
+      pattern: "*.bam"
+  - human_reference:
+      type: file
+      description: Reference genome index for host read removal.
+      pattern: "*.{fa,fasta,bt2}"
+  - krakenuniq_db:
+      type: directory
+      description: KrakenUniq database for microbial classification.
+      pattern: "*/"
+  - bracken_db:
+      type: directory
+      description: Bracken database for refining taxonomic assignments.
+      pattern: "*/"
+  - metaphlan_db:
+      type: directory
+      description: MetaPhlAn database for species-level profiling.
+      pattern: "*/"
+output:
+  - unmapped_bam:
+      type: file
+      description: BAM file containing only unmapped reads extracted from the input BAM.
+      pattern: "results/unmapped.bam"
+  - unmapped_fastq:
+      type: file
+      description: FASTQ files converted from the unmapped BAM.
+      pattern: "results/unmapped_{1,2}.fastq"
+  - filtered_fastq:
+      type: file
+      description: FASTQ files after removing host contamination.
+      pattern: "results/filtered_{1,2}.fastq"
+  - krakenuniq_report:
+      type: file
+      description: KrakenUniq taxonomic classification report.
+      pattern: "results/krakenuniq_report.txt"
+  - bracken_output:
+      type: file
+      description: Bracken refinement output for species abundance.
+      pattern: "results/bracken_output.tsv"
+  - metaphlan_output:
+      type: file
+      description: MetaPhlAn species-level classification output.
+      pattern: "results/metaphlan_output.txt"
+  - cell_barcode_counts:
+      type: file
+      description: Per-cell microbial read counts extracted from BAM.
+      pattern: "results/cell_barcode_counts.txt"
+  - cell_microbiome_profile:
+      type: file
+      description: Per-cell microbiome profile generated using UMI-tools.
+      pattern: "results/cell_microbiome_profile.tsv"
+authors:
+  - Your Name (@syedsazaidi)
+maintainers:
+  - Your Name (@syedsazaidi)
